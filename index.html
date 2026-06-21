@@ -652,6 +652,117 @@
         scroll-behavior: auto !important;
       }
     }
+
+    /* ── MOBILE FIXES: tránh lỗi lật thiệp 3D trên Safari/Zalo và giữ scroll hint trong màn hình ── */
+    @media (max-width: 640px) {
+      .hero {
+        min-height: 100svh;
+        min-height: 100dvh;
+        padding: 88px 18px 150px;
+        justify-content: center;
+      }
+
+      .hero-name {
+        font-size: clamp(46px, 16vw, 74px);
+        line-height: .92;
+      }
+
+      .hero-sub {
+        margin-top: 20px;
+        line-height: 1.75;
+      }
+
+      .hero-actions {
+        margin-top: 24px;
+      }
+
+      .scroll-hint {
+        bottom: max(78px, calc(env(safe-area-inset-bottom) + 78px));
+        font-size: 10px;
+        z-index: 3;
+      }
+
+      .letter-section {
+        overflow: visible;
+      }
+
+      .flip-wrap {
+        perspective: none;
+      }
+
+      .flip-card,
+      .flip-card.flipped {
+        transform: none !important;
+        transform-style: flat;
+        transition: height .35s ease;
+      }
+
+      .flip-front,
+      .flip-back {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        min-height: 0;
+        transform: none !important;
+        backface-visibility: visible;
+        -webkit-backface-visibility: visible;
+      }
+
+      .flip-front {
+        min-height: 320px;
+      }
+
+      .flip-back {
+        display: none;
+        overflow: hidden;
+      }
+
+      .flip-card.flipped .flip-front {
+        display: none;
+      }
+
+      .flip-card.flipped .flip-back {
+        display: flex;
+      }
+
+      .flip-back-header {
+        padding: 15px 18px 12px;
+        min-height: 58px;
+      }
+
+      .flip-close-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 22px;
+        font-weight: 600;
+        background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(255,240,243,.95));
+        color: var(--pink-d);
+        box-shadow: 0 8px 20px rgba(190,68,103,.13);
+      }
+
+      .flip-close-btn:hover {
+        transform: none;
+      }
+
+      .flip-back-body {
+        padding: 18px 22px 28px;
+      }
+
+      .letter-greeting {
+        font-size: 24px;
+        margin-bottom: 16px;
+      }
+
+      .letter-body {
+        font-size: 15px;
+        line-height: 1.95;
+      }
+
+      .letter-sign {
+        font-size: 20px;
+      }
+    }
+
   </style>
 </head>
 
@@ -718,7 +829,7 @@
         <div class="flip-back">
           <div class="flip-back-header">
             <span class="flip-back-header-title"></span>
-            <button class="flip-close-btn" id="flipCloseBtn" title="Lật lại">↩</button>
+            <button class="flip-close-btn" id="flipCloseBtn" title="Lật lại" aria-label="Lật lại thiệp">←</button>
           </div>
           <div class="flip-back-body">
             <p class="letter-greeting">Gửi anh,</p>
@@ -977,6 +1088,8 @@ function updateFlipCardHeight() {
     : flipCard.querySelector('.flip-front');
 
   if (activeSide) {
+    // Trên mobile mặt trước/mặt sau được ẩn-hiện thay vì xoay 3D,
+    // nên đo đúng mặt đang hiển thị để khung tự khớp với nội dung.
     flipCard.style.height = activeSide.scrollHeight + 'px';
   }
 }
