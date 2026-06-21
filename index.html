@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chúc mừng sinh nhật anh 🎂</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #FFF5F7;
+      --pink-l:  #FFD6E4;
+      --pink:    #F5839A;
+      --pink-d:  #C94D6E;
+      --rose:    #E8507A;
+      --gold:    #F7C59F;
+      --text:    #3D1A24;
+      --muted:   #9B6070;
+      --white:   #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── PETALS CANVAS ── */
+    #petalCanvas {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── WRAPPER ── */
+    .page { position: relative; z-index: 1; }
+
+    /* ═══════════════════════════
+       SECTION 1 — HERO
+    ═══════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 60px 24px 80px;
+      position: relative;
+    }
+
+    .hero-ribbon {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero-ribbon::before, .hero-ribbon::after {
+      content: ''; display: block;
+      width: 40px; height: 1px; background: var(--pink-l);
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(56px, 12vw, 120px);
+      font-weight: 600; line-height: 0.9;
+      color: var(--rose);
+      letter-spacing: -2px;
+      position: relative;
+    }
+    .hero-name em {
+      font-style: italic; color: var(--pink-d);
+      display: block; font-size: 0.55em;
+      letter-spacing: 0px; margin-bottom: 6px;
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2.5vw, 18px);
+      color: var(--muted); font-weight: 300;
+      margin-top: 28px; line-height: 1.8;
+      max-width: 420px;
+    }
+
+    .scroll-hint {
+      position: absolute; bottom: 36px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: var(--pink); font-size: 12px; letter-spacing: 2px;
+      animation: bob 2s ease-in-out infinite;
+    }
+    .scroll-hint svg { width: 20px; opacity: 0.6; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+    /* ═══════════════════════════
+       SECTION 2 — ENVELOPE / LETTER
+    ═══════════════════════════ */
+    .letter-section {
+      padding: 80px 24px 100px;
+      display: flex; flex-direction: column;
+      align-items: center;
+    }
+
+    .section-eyebrow {
+      font-size: 11px; letter-spacing: 4px; font-weight: 500;
+      text-transform: uppercase; color: var(--pink);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 46px);
+      font-weight: 600; text-align: center;
+      margin-bottom: 48px; line-height: 1.2;
+      color: var(--text);
+    }
+    .section-title i { font-style: italic; color: var(--rose); }
+
+    /* ENVELOPE */
+    .envelope-wrap {
+      width: min(560px, 100%);
+      perspective: 1000px;
+    }
+
+    .envelope {
+      position: relative;
+      cursor: pointer;
+      transform-style: preserve-3d;
+    }
+
+    .env-body {
+      background: var(--white);
+      border: 1.5px solid var(--pink-l);
+      border-radius: 4px 4px 12px 12px;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(200,70,110,0.12), 0 2px 8px rgba(200,70,110,0.08);
+      transition: box-shadow 0.3s;
+    }
+    .envelope:hover .env-body {
+      box-shadow: 0 16px 56px rgba(200,70,110,0.18), 0 4px 12px rgba(200,70,110,0.1);
+    }
+
+    /* V-FLAP */
+    .env-flap {
+      width: 100%;
+      height: 0; padding-top: 50%;
+      position: relative;
+      overflow: hidden;
+      transform-origin: top center;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 2;
+    }
+    .env-flap::before {
+      content: '';
+      position: absolute; top: 0; left: -2px; right: -2px;
+      height: 0;
+      border-left: calc(50% + 2px) solid transparent;
+      border-right: calc(50% + 2px) solid transparent;
+      border-top: calc(50%) solid var(--pink-l);
+    }
+    .env-flap::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 0;
+      border-left: 50% solid transparent;
+      border-right: 50% solid transparent;
+      border-top: 50% solid var(--white);
+    }
+    .envelope.open .env-flap {
+      transform: rotateX(-180deg);
+    }
+
+    /* LETTER CONTENT */
+    .env-content {
+      padding: 40px 40px 48px;
+      position: relative;
+    }
+    .env-content::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        transparent, transparent 31px,
+        rgba(245,131,154,0.09) 31px, rgba(245,131,154,0.09) 32px
+      );
+      pointer-events: none;
+    }
+
+    .letter-inner {
+      position: relative; z-index: 1;
+      max-height: 0; overflow: hidden;
+      transition: max-height 1s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.6s ease 0.3s;
+      opacity: 0;
+    }
+    .envelope.open .letter-inner {
+      max-height: 800px;
+      opacity: 1;
+    }
+
+    .letter-greeting {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-style: italic;
+      color: var(--rose); margin-bottom: 20px;
+    }
+    .letter-body {
+      font-size: 15px; line-height: 2;
+      color: var(--text); white-space: pre-line;
+    }
+    .letter-sign {
+      margin-top: 28px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-size: 20px;
+      color: var(--rose); text-align: right;
+    }
+
+    .open-hint {
+      text-align: center; padding: 28px 40px;
+      font-size: 14px; color: var(--muted);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .open-hint .heart-icon { font-size: 20px; animation: hb 1.2s ease-in-out infinite; }
+    @keyframes hb { 0%,100%{transform:scale(1)} 50%{transform:scale(1.22)} }
+    .envelope.open .open-hint { display: none; }
+
+    /* ═══════════════════════════
+       SECTION 3 — WISHES GRID
+    ═══════════════════════════ */
+    .wishes-section {
+      padding: 60px 24px 100px;
+      background: linear-gradient(180deg, var(--cream) 0%, #FFF0F3 100%);
+    }
+    .wishes-inner { max-width: 900px; margin: 0 auto; }
+
+    .wishes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px; margin-top: 0;
+    }
+
+    .wish-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 30px 24px;
+      text-align: center;
+      border: 1px solid rgba(245,131,154,0.15);
+      box-shadow: 0 2px 12px rgba(200,70,110,0.06);
+      transition: transform 0.25s, box-shadow 0.25s;
+      opacity: 0; transform: translateY(30px);
+    }
+    .wish-card.visible {
+      opacity: 1; transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s;
+    }
+    .wish-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 36px rgba(200,70,110,0.14);
+    }
+    .wish-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+    .wish-ttl {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; font-weight: 600;
+      color: var(--text); margin-bottom: 8px;
+    }
+    .wish-txt { font-size: 13px; color: var(--muted); line-height: 1.75; }
+
+    /* ═══════════════════════════
+       SECTION 4 — CAKE + CANDLE
+    ═══════════════════════════ */
+    .cake-section {
+      padding: 80px 24px 100px;
+      text-align: center;
+    }
+
+    .cake-svg-wrap {
+      margin: 40px auto 0;
+      width: min(300px, 80%);
+      cursor: pointer;
+      position: relative;
+    }
+    .cake-svg-wrap .blow-hint {
+      font-size: 13px; color: var(--pink);
+      margin-top: 16px; letter-spacing: 1px;
+      animation: bob 2s ease-in-out infinite;
+    }
+
+    /* ═══════════════════════════
+       SECTION 5 — FOOTER
+    ═══════════════════════════ */
+    .footer {
+      padding: 60px 24px 80px;
+      text-align: center;
+      background: linear-gradient(180deg, #FFF0F3, var(--cream));
+    }
+    .footer-big {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 6vw, 64px);
+      font-weight: 600; color: var(--rose);
+      line-height: 1.15;
+    }
+    .footer-big em { font-style: italic; color: var(--pink-d); }
+    .footer-small {
+      margin-top: 20px; font-size: 14px;
+      color: var(--muted); line-height: 1.8;
+    }
+    .footer-hearts {
+      margin-top: 32px; font-size: 28px;
+      display: flex; justify-content: center; gap: 10px;
+    }
+    .footer-hearts span { animation: hb 1.2s ease-in-out infinite; }
+    .footer-hearts span:nth-child(2) { animation-delay: 0.15s; }
+    .footer-hearts span:nth-child(3) { animation-delay: 0.3s; }
+
+    /* ═══════════════════════════
+       CONFETTI ON BLOW
+    ═══════════════════════════ */
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: fixed; top: 0; z-index: 999;
+      width: 8px; height: 8px;
+      border-radius: 2px;
+      pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      .wishes-grid { grid-template-columns: 1fr; gap: 14px; }
+      .env-content { padding: 28px 22px 36px; }
+      .letter-body { font-size: 14px; }
+    }
+    @media (max-width: 900px) and (min-width: 641px) {
+      .wishes-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* REVEAL ANIMATION */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .hero-ribbon  { animation: fadeUp 0.7s ease 0.1s both; }
+    .hero-name    { animation: fadeUp 0.7s ease 0.25s both; }
+    .hero-sub     { animation: fadeUp 0.7s ease 0.45s both; }
+    .scroll-hint  { animation: fadeUp 0.7s ease 0.65s both, bob 2s ease-in-out 0.65s infinite; }
+  </style>
+</head>
+<body>
+
+<canvas id="petalCanvas"></canvas>
+
+<div class="page">
+
+  <!-- ════ HERO ════ -->
+  <section class="hero">
+    <div class="hero-ribbon">Chúc mừng sinh nhật</div>
+    <h1 class="hero-name">
+      <em>gửi anh</em>
+      Chúc anh một sinh nhật thật vui
+    </h1>
+    <p class="hero-sub">
+      Mong hôm nay của anh nhẹ nhàng, vui vẻ và có vài điều đáng nhớ.<br/>
+      Cảm ơn anh vì đã xuất hiện trong khoảng thời gian này.
+    </p>
+    <div class="scroll-hint">
+      <span>cuộn xuống</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ════ LETTER ════ -->
+  <section class="letter-section">
+    <div class="section-eyebrow">vài dòng nhỏ</div>
+    <h2 class="section-title">Một lời chúc nhỏ<br/>gửi đến <i>anh</i></h2>
+
+    <div class="envelope-wrap">
+      <div class="envelope" id="envelope">
+        <div class="env-body">
+          <div class="env-flap"></div>
+          <div class="env-content">
+            <div class="open-hint">
+              <span class="heart-icon">💌</span>
+              Nhấn vào đây để mở thư
+            </div>
+            <div class="letter-inner" id="letterInner">
+              <p class="letter-greeting">Gửi anh,</p>
+              <p class="letter-body">Hôm nay là sinh nhật anh, nên em muốn gửi anh một lời chúc hơi chỉn chu hơn bình thường một chút.
+
+Chúc anh tuổi mới khỏe hơn, vui hơn, làm được những điều anh đang cố gắng, và bớt gặp những ngày mệt mỏi không cần thiết.
+
+Em không biết sau này mọi thứ sẽ như thế nào, nên cũng không nói gì quá xa. Chỉ là ở hiện tại, em thấy vui vì có dịp được biết anh, được nói chuyện với anh, và được gửi lời chúc này đến anh.</p>
+              <p class="letter-sign">Chúc mừng sinh nhật anh. 🎂</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ WISHES ════ -->
+  <section class="wishes-section">
+    <div class="wishes-inner">
+      <div class="section-eyebrow" style="text-align:center;">những lời chúc</div>
+      <h2 class="section-title" style="margin-bottom:36px;">Em chúc anh</h2>
+      <div class="wishes-grid">
+        <div class="wish-card">
+          <span class="wish-icon">🌸</span>
+          <div class="wish-ttl">Luôn rạng rỡ</div>
+          <p class="wish-txt">Mong anh có nhiều ngày vui hơn, cười nhiều hơn và bớt phải suy nghĩ quá nhiều.</p>
+        </div>
+        <div class="wish-card">
+          <span class="wish-icon">💪</span>
+          <div class="wish-ttl">Thật khỏe mạnh</div>
+          <p class="wish-txt">Chúc anh luôn khỏe, ngủ đủ hơn một chút và có đủ năng lượng cho những điều anh muốn làm.</p>
+        </div>
+        <div class="wish-card">
+          <span class="wish-icon">⭐</span>
+          <div class="wish-ttl">Thực hiện ước mơ</div>
+          <p class="wish-txt">Mong những gì anh đang cố gắng đều dần có kết quả tốt, theo cách xứng đáng nhất.</p>
+        </div>
+        <div class="wish-card">
+          <span class="wish-icon">☀️</span>
+          <div class="wish-ttl">Ngày nào cũng vui</div>
+          <p class="wish-txt">Chúc tuổi mới của anh nhẹ nhàng hơn một chút, nhiều tin vui hơn một chút.</p>
+        </div>
+        <div class="wish-card">
+          <span class="wish-icon">🍀</span>
+          <div class="wish-ttl">May mắn đến hoài</div>
+          <p class="wish-txt">Mong anh gặp nhiều điều thuận lợi, cả trong việc lớn lẫn những chuyện rất nhỏ hằng ngày.</p>
+        </div>
+        <div class="wish-card">
+          <span class="wish-icon">💖</span>
+          <div class="wish-ttl">Luôn bình yên</div>
+          <p class="wish-txt">Mong anh có những khoảng thời gian thật dễ chịu, không quá áp lực, không quá vội vàng.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ CAKE ════ -->
+  <section class="cake-section">
+    <div class="section-eyebrow">thổi nến đi nào</div>
+    <h2 class="section-title">Ước gì thật nhiều<br/><i>điều tốt đẹp</i></h2>
+    <div class="cake-svg-wrap" id="cakeWrap">
+      <svg id="cakeSvg" viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <!-- Đĩa -->
+        <ellipse cx="120" cy="198" rx="100" ry="14" fill="#F5C9D8" opacity="0.5"/>
+        <!-- Thân bánh tầng 2 -->
+        <rect x="55" y="120" width="130" height="60" rx="8" fill="#F9A8C0"/>
+        <rect x="55" y="120" width="130" height="12" rx="4" fill="#F5839A"/>
+        <!-- Kem viền tầng 2 -->
+        <path d="M55 132 Q70 120 85 132 Q100 144 115 132 Q130 120 145 132 Q160 144 175 132 Q185 126 185 132" stroke="#fff" stroke-width="4" fill="none" opacity="0.6"/>
+        <!-- Thân bánh tầng 1 -->
+        <rect x="30" y="155" width="180" height="40" rx="8" fill="#F7B8CB"/>
+        <rect x="30" y="155" width="180" height="12" rx="4" fill="#E8507A"/>
+        <!-- Kem viền tầng 1 -->
+        <path d="M30 167 Q48 155 65 167 Q82 179 98 167 Q115 155 132 167 Q148 179 165 167 Q182 155 200 167 Q210 160 210 167" stroke="#fff" stroke-width="4" fill="none" opacity="0.6"/>
+        <!-- Dâu tây -->
+        <ellipse cx="80" cy="152" rx="9" ry="8" fill="#E8507A"/>
+        <polygon points="80,144 83,150 77,150" fill="#5D9B4A" opacity="0.9"/>
+        <ellipse cx="120" cy="150" rx="9" ry="8" fill="#E8507A"/>
+        <polygon points="120,142 123,148 117,148" fill="#5D9B4A" opacity="0.9"/>
+        <ellipse cx="160" cy="152" rx="9" ry="8" fill="#E8507A"/>
+        <polygon points="160,144 163,150 157,150" fill="#5D9B4A" opacity="0.9"/>
+        <!-- Nến (3 cái) -->
+        <rect x="103" y="88" width="10" height="34" rx="3" fill="#FFE0A3"/>
+        <rect x="115" y="80" width="10" height="42" rx="3" fill="#FFB3C6"/>
+        <rect x="127" y="88" width="10" height="34" rx="3" fill="#B5D5FF"/>
+        <!-- Ngọn lửa -->
+        <g id="flame1">
+          <ellipse cx="108" cy="84" rx="5" ry="8" fill="#FFD166" opacity="0.9"/>
+          <ellipse cx="108" cy="83" rx="3" ry="5" fill="#FF9F43"/>
+          <ellipse cx="108" cy="82" rx="1.5" ry="3" fill="#fff" opacity="0.7"/>
+        </g>
+        <g id="flame2">
+          <ellipse cx="120" cy="76" rx="5" ry="9" fill="#FFD166" opacity="0.9"/>
+          <ellipse cx="120" cy="75" rx="3" ry="5.5" fill="#FF9F43"/>
+          <ellipse cx="120" cy="74" rx="1.5" ry="3" fill="#fff" opacity="0.7"/>
+        </g>
+        <g id="flame3">
+          <ellipse cx="132" cy="84" rx="5" ry="8" fill="#FFD166" opacity="0.9"/>
+          <ellipse cx="132" cy="83" rx="3" ry="5" fill="#FF9F43"/>
+          <ellipse cx="132" cy="82" rx="1.5" ry="3" fill="#fff" opacity="0.7"/>
+        </g>
+        <!-- Trang trí chữ -->
+        <text x="120" y="180" text-anchor="middle" font-family="Playfair Display, serif" font-size="13" fill="#fff" font-style="italic" opacity="0.9">Happy Birthday</text>
+      </svg>
+      <p class="blow-hint" id="blowHint">✨ Nhấn vào bánh để thổi nến & ước một điều!</p>
+    </div>
+  </section>
+
+  <!-- ════ FOOTER ════ -->
+  <footer class="footer">
+    <p class="footer-big">Happy Birthday,<br/><em>anh nhé.</em></p>
+    <p class="footer-small">
+      Chúc anh tuổi mới vui vẻ, khỏe mạnh,<br/>
+      và có thêm nhiều điều đáng mong chờ.
+    </p>
+    <div class="footer-hearts">
+      <span>🌸</span><span>💖</span><span>🌸</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* ══ PETALS ══ */
+const canvas = document.getElementById('petalCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, petals = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const TYPES = ['🌸','🌺','💗','🌷','💕','✿'];
+
+function makePetal() {
+  return {
+    x: Math.random() * W,
+    y: -30,
+    type: TYPES[Math.floor(Math.random() * TYPES.length)],
+    size: 12 + Math.random() * 16,
+    speed: 0.5 + Math.random() * 1.2,
+    drift: (Math.random() - 0.5) * 0.8,
+    rot: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.04,
+    opacity: 0.5 + Math.random() * 0.5
+  };
+}
+
+for (let i = 0; i < 18; i++) {
+  const p = makePetal();
+  p.y = Math.random() * H;
+  petals.push(p);
+}
+
+function animPetals() {
+  ctx.clearRect(0, 0, W, H);
+  if (Math.random() < 0.04) petals.push(makePetal());
+  petals = petals.filter(p => p.y < H + 40);
+  petals.forEach(p => {
+    p.y += p.speed;
+    p.x += p.drift + Math.sin(p.y * 0.02) * 0.4;
+    p.rot += p.rotSpeed;
+    ctx.save();
+    ctx.globalAlpha = p.opacity;
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.font = `${p.size}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(p.type, 0, 0);
+    ctx.restore();
+  });
+  requestAnimationFrame(animPetals);
+}
+animPetals();
+
+/* ══ ENVELOPE ══ */
+const env = document.getElementById('envelope');
+env.addEventListener('click', () => {
+  if (!env.classList.contains('open')) {
+    env.classList.add('open');
+    playPop();
+  }
+});
+
+/* ══ SCROLL REVEAL ══ */
+const cards = document.querySelectorAll('.wish-card');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, idx) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), idx * 90);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+cards.forEach(c => observer.observe(c));
+
+/* ══ CANDLE BLOW ══ */
+let blown = false;
+document.getElementById('cakeWrap').addEventListener('click', () => {
+  if (blown) return;
+  blown = true;
+  // Tắt nến
+  ['flame1','flame2','flame3'].forEach((id,i) => {
+    setTimeout(() => {
+      const g = document.getElementById(id);
+      if (g) {
+        g.style.transition = 'opacity 0.3s';
+        g.style.opacity = '0';
+      }
+    }, i * 120);
+  });
+  document.getElementById('blowHint').textContent = '🎉 Mong điều anh ước sẽ sớm thành hiện thực!';
+  // Confetti
+  setTimeout(launchConfetti, 400);
+  playSuccess();
+});
+
+function launchConfetti() {
+  const colors = ['#F5839A','#FFD6E4','#F7C59F','#B5D5FF','#FFE0A3','#E8507A','#C94D6E','#fff'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = (10 + Math.random() * 80) + 'vw';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width = (6 + Math.random() * 8) + 'px';
+    el.style.height = (6 + Math.random() * 8) + 'px';
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    el.style.animationDuration = (2 + Math.random() * 3) + 's';
+    el.style.animationDelay = (Math.random() * 0.8) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+  }
+}
+
+/* ══ WEB AUDIO ══ */
+let actx = null;
+function ensureAudio() {
+  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playPop() {
+  try {
+    ensureAudio();
+    const osc = actx.createOscillator();
+    const gain = actx.createGain();
+    osc.connect(gain); gain.connect(actx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400, actx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, actx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.2, actx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.3);
+    osc.start(); osc.stop(actx.currentTime + 0.3);
+  } catch(e){}
+}
+
+function playSuccess() {
+  try {
+    ensureAudio();
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((f, i) => {
+      setTimeout(() => {
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.connect(gain); gain.connect(actx.destination);
+        osc.type = 'sine'; osc.frequency.value = f;
+        gain.gain.setValueAtTime(0.15, actx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.35);
+        osc.start(); osc.stop(actx.currentTime + 0.35);
+      }, i * 100);
+    });
+  } catch(e){}
+}
+</script>
+</body>
+</html>
